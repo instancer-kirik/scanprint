@@ -4,7 +4,7 @@ import random
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                             QHBoxLayout, QLabel, QLineEdit, QPushButton,
                             QComboBox, QGridLayout, QGroupBox, QStatusBar,
-                            QMessageBox, QFileDialog, QCheckBox)
+                            QMessageBox, QFileDialog, QCheckBox, QTextEdit)
 from PyQt6.QtCore import Qt, pyqtSignal, QTimer
 import pandas as pd
 
@@ -281,23 +281,51 @@ class LabelPreviewWidget(QWidget):
             self.demo_checkbox.setEnabled(False)
 
         # Preview area
-        self.preview_group = QGroupBox("Label Preview")
+        self.preview_group = QGroupBox("Label Preview (Generated Output)")
+        self.preview_group.setStyleSheet("""
+            QGroupBox {
+                font-weight: bold;
+                border: 2px solid #2980b9;
+                border-radius: 5px;
+                margin-top: 1ex;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                subcontrol-position: top center;
+                padding: 0 5px;
+                background-color: #2980b9;
+                color: white;
+            }
+        """)
+        # Add a notification label for updates
+        self.preview_notification = QLabel("Label Preview Ready")
+        self.preview_notification.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.preview_notification.setStyleSheet("""
+            color: white;
+            background-color: #27ae60;
+            border-radius: 3px;
+            padding: 3px;
+            font-weight: bold;
+        """)
+        self.preview_notification.setVisible(False)
         preview_layout = QVBoxLayout()
 
-        self.preview_text = QLabel("")
-        self.preview_text.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        self.preview_text = QTextEdit("")
+        self.preview_text.setReadOnly(True)
         self.preview_text.setStyleSheet("""
-            background-color: white;
-            border: 1px solid #ccc;
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
             padding: 10px;
-            font-family: monospace;
-            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
             margin: 5px;
         """)
         self.preview_text.setMinimumHeight(200)
-        self.preview_text.setTextFormat(Qt.TextFormat.PlainText)
-        self.preview_text.setWordWrap(True)
 
+        preview_layout.addWidget(self.preview_notification)
         preview_layout.addWidget(self.preview_text)
         self.preview_group.setLayout(preview_layout)
 
@@ -376,14 +404,25 @@ class LabelPreviewWidget(QWidget):
         print(f"DEBUG: Label preview text to set ({len(label_text)} chars):\n{label_text}")
         
         # Set the preview text
-        self.preview_text.setText(label_text)
+        self.preview_text.setPlainText(label_text)
         
         # Force update the preview to be visible
         self.preview_text.setVisible(True)
         self.preview_text.repaint()
         
+        # Add a small delay to ensure the UI updates properly
+        QTimer.singleShot(100, self.preview_text.repaint)
+        
+        # Set focus to the preview text to ensure it's highlighted
+        self.preview_text.setFocus()
+        
+        # Show the update notification temporarily
+        self.preview_notification.setText("Preview Updated!")
+        self.preview_notification.setVisible(True)
+        QTimer.singleShot(2000, lambda: self.preview_notification.setVisible(False))
+        
         # Debug log the current text in the widget
-        current_text = self.preview_text.text()
+        current_text = self.preview_text.toPlainText()
         print(f"DEBUG: Preview text after setting ({len(current_text)} chars):\n{current_text}")
 
         # Enable buttons when we have content
@@ -394,8 +433,11 @@ class LabelPreviewWidget(QWidget):
     def clear(self):
         print("DEBUG: Clearing label preview")
         self.label_text = ""
-        self.preview_text.setText("")
+        self.preview_text.setPlainText("")
         self.preview_text.repaint()
+        
+        # Hide the notification if visible
+        self.preview_notification.setVisible(False)
 
         # Disable buttons when no content
         self.save_text_btn.setEnabled(False)
@@ -709,9 +751,11 @@ class MainWindow(QMainWindow):
         self.preview_widget.set_content(label_text)
         
         # Make sure the preview is shown and refreshed
-        self.preview_widget.preview_text.repaint()
         QApplication.processEvents()
-
+        # Add a small delay to ensure the UI updates properly
+        QTimer.singleShot(100, lambda: self.preview_widget.preview_text.repaint())
+        
+        # Show status message
         self.status_bar.showMessage(f"Label generated for {item_data.get('product_name', '')}")
 
     def on_print_label(self, template_name):

@@ -126,12 +126,56 @@ Available fields:
 - Update your inventory by replacing the CSV file with a fresh export from MarktPOS
 - Print history is recorded in `labels/history.csv`
 
+## 🖥️ UI Features
+
+- **Label Preview**: Clear visualization of label content before printing
+- **Template Selection**: Switch between different label formats on-the-fly
+- **Visual Feedback**: UI elements provide clear feedback on actions
+- **Dark Mode Compatible**: Works with system dark mode settings
+
+### Screenshots
+
+![Label Preview Screenshot](https://i.imgur.com/example.png)
+*Label Preview with generated content*
+
 ## 🔧 Development
 
 See the `PROJECT_HEADERS_REFINED.md` file for a detailed overview of the project structure and available functions.
 
+### Recent Updates
+
+- **Improved Label Preview**: Enhanced contrast and readability of the label preview area
+- **Fixed UI Issues**: Resolved issues with text visibility in different color schemes
+- **Visual Feedback**: Added notification indicators when label preview is updated
+
+## 🤝 Contributing
+
+Contributions are welcome! If you'd like to improve scanprint:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+### Reporting Issues
+
+If you encounter any problems:
+
+1. Check if the issue already exists in the [Issues](https://github.com/yourusername/scanprint/issues) section
+2. If not, create a new issue with:
+   - A clear title and description
+   - Steps to reproduce the behavior
+   - Expected and actual behavior
+   - Screenshots if applicable
+   - Any relevant logs or error messages
 
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+**Note**: When reporting UI issues, please include information about your system theme (light/dark) and any custom color schemes as these can affect the appearance of elements like the label preview. Reference the screenshots section for expected appearance.
