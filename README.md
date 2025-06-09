@@ -1,6 +1,9 @@
 # scanprint: Overstock Inventory Labeling System
 
 A PyQt6 desktop application for scanning barcodes, retrieving product data from MarktPOS inventory, and generating printable labels for overstock/liquidation retail inventory.
+Adding an item through this changes/copies CSV, requiring reimport to sync with marktpos. Unable/advised against making hacky solution to share inventory state. 
+Planning on making inventory management using turso hosted database for cloud shop tenants. unless wanted to be locally stored. another option is ElectricSQL(keeps local, with sync)
+![screenshot](https://github.com/user-attachments/assets/e6a78978-bb8a-42d8-aba1-ac8f0c63a04f)
 
 ## 📁 Project Structure
 
